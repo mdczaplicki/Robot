@@ -1,9 +1,7 @@
-import javafx.scene.shape.Circle;
 import robocode.*;
 import robocode.Robot;
 
 import java.awt.*;
-import java.awt.event.PaintEvent;
 import java.util.Random;
 
 public class MyRobot extends Robot
