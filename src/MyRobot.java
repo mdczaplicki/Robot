@@ -71,9 +71,6 @@ public class MyRobot extends Robot
         enemy_tx = (int)(enemy_x/dim_factor[0]);
         enemy_ty = (int)(enemy_y/dim_factor[1]);
         enemy_tab[enemy_tx][enemy_ty] = true;
-        enemy_tab[enemy_tx + 1][enemy_ty] = true;
-        enemy_tab[enemy_tx][enemy_ty + 1] = true;
-        enemy_tab[enemy_tx + 1][enemy_ty + 1] = true;
         //fire(50);
         for (int i = -1; i < 3; i++)
         {
