@@ -2,7 +2,6 @@ import robocode.*;
 import robocode.Robot;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Random;
 
 public class MyRobot extends Robot
