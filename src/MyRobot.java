@@ -75,11 +75,24 @@ public class MyRobot extends Robot
         enemy_tab[enemy_tx][enemy_ty + 1] = true;
         enemy_tab[enemy_tx + 1][enemy_ty + 1] = true;
         //fire(50);
+        for (int i = -1; i < 3; i++)
+        {
+            for (int j = -1; j < 3; j++)
+            {
+                try
+                {
+                    enemy_tab[enemy_tx + i][enemy_ty + j] = true;
+                }
+                catch (IndexOutOfBoundsException e)
+                {
+
+                }
+            }
+        }
     }
 
     @Override
-    public void onHitRobot(HitRobotEvent event)
-    {
+    public void onHitRobot(HitRobotEvent event) {
         back(40);
     }
 
