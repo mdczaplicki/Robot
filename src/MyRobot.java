@@ -2,7 +2,9 @@ import robocode.*;
 import robocode.Robot;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class MyRobot extends Robot
@@ -23,6 +25,10 @@ public class MyRobot extends Robot
     private int my_ty;
     private boolean clutch = false;
     private int just_once = 0;
+
+    private ArrayList<ATile> open_list = new ArrayList<>();
+    private ArrayList<ATile> close_list = new ArrayList<>();
+    private double path = 0;
 
     @Override
     public void run()
@@ -50,29 +56,59 @@ public class MyRobot extends Robot
             for (int j = 0; j < dimension; j++)
             {
                 double fromStart = (double)Math.round(countDistance(3, 3, i, j)*100)/100;
-                double toEnd = 1.0d;
-                aTiles[i][j] = new ATile(fromStart, toEnd);
+                double toEnd = (double)Math.round(countDistance(i, j, finish.x, finish.y)*100)/100;
+                boolean isAvailable = !enemy_tab[i][j];
+                aTiles[i][j] = new ATile(fromStart, toEnd, isAvailable, null);
             }
         }
 
+        meAsObstacle();
+        open_list.add(aTiles[my_tx][my_ty]);
 
-        while (true)
+        while (open_list.size() > 0)
         {
+            meAsObstacle();
+            int minIndex = 0;
+            double tmp = 1000;
+            for (int index = 0; index < open_list.size(); index++)
+            {
+                if (open_list.get(index).f < tmp)
+                {
+                    tmp = open_list.get(index).f;
+                    minIndex = index;
+                }
+            }
+            close_list.add(open_list.get(minIndex));
+            if (open_list.get(minIndex).h == 0)
+            {
+                out.println("Exit found!");
+                break;
+            }
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    if (!aTiles[i][j].available || close_list.contains(aTiles[i][j]));
+                    else if (!open_list.contains(aTiles[i][j]))
+                    {
+                        aTiles[i][j].parent = aTiles[my_tx][my_ty];
+                        path += countDistance(my_tx, my_ty, i, j);
+                        aTiles[i][j].g = path;
+                        aTiles[i][j].f = aTiles[i][j].g + aTiles[i][j].h;
+                        open_list.add(aTiles[i][j]);
+                    }
+                }
+            }
+
+            ahead(1);
             if (just_once < 100) radar();
             meAsObstacle();
-            if (counter == 10)
-            {
-                counter = 0;
-                out.println("X = " + (double)Math.round(getX() * 100)/100 + "|| Y = " + (double)Math.round(getY() * 100)/100);
-            }
-            if (my_tx - 1 == 0 || my_tx + 1 == dimension || my_ty - 1 == 0 || my_ty + 1 == dimension)
-            {
-                if (clutch) turnLeft(90);
-                clutch = !clutch;
-            }
-            if (tabComparator()) turnLeft(90);
-            ahead(20);
-            counter++;
+            //if (counter == 10)
+            //{
+            //counter = 0;
+            //out.println("X = " + (double)Math.round(getX() * 100)/100 + "|| Y = " + (double)Math.round(getY() * 100)/100);
+            //}
+            //counter++;
         }
     }
 
