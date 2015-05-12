@@ -4,7 +4,8 @@ import robocode.ScannedRobotEvent;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Robot2 extends Robot {
+public class Robot2 extends Robot
+{
 
     int just_once = 0;
     int dimension = 40;
@@ -145,16 +146,20 @@ public class Robot2 extends Robot {
                 for (int j = Q.getJ() - 1; j < Q.getJ() + 2; j++)
                 {
                     if (Math.abs(i - Q.getI()) == Math.abs(j - Q.getJ())) continue;
-                    try {
+                    try
+                    {
                         if (!map[i][j].isAvailable() || closed.contains(map[i][j])) ;
-                        else if (!open.contains(map[i][j])) {
+                        else if (!open.contains(map[i][j]))
+                        {
                             map[i][j].setParent(Q);
                             map[i][j].setG(Q.getG() + countDistance(i, j, Q.getI(), Q.getJ()));
                             map[i][j].setF();
                             open.add(map[i][j]);
-                        } else {
+                        } else
+                        {
                             double newG = Q.getG() + countDistance(i, j, Q.getI(), Q.getJ());
-                            if (newG < Q.getG()) {
+                            if (newG < Q.getG())
+                            {
                                 open.remove(map[i][j]);
                                 map[i][j].setParent(Q);
                                 map[i][j].setG(newG);
