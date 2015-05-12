@@ -18,7 +18,7 @@ public class MyRobot extends Robot
     private boolean radar_dir = true;
     private boolean[][] enemy_tab;
     private ATile aTiles[][];
-    private Finish finish = new Finish(38, 38);
+    private Point finish = new Point(38, 38);
     private boolean[][] my_tab;
     private int dimension = 40;
     private int my_tx;
@@ -58,7 +58,7 @@ public class MyRobot extends Robot
                 double fromStart = (double)Math.round(countDistance(3, 3, i, j)*100)/100;
                 double toEnd = (double)Math.round(countDistance(i, j, finish.x, finish.y)*100)/100;
                 boolean isAvailable = !enemy_tab[i][j];
-                aTiles[i][j] = new ATile(fromStart, toEnd, isAvailable, null);
+                aTiles[i][j] = new ATile(fromStart, toEnd, isAvailable, null, i, j);
             }
         }
 
@@ -78,29 +78,42 @@ public class MyRobot extends Robot
                     minIndex = index;
                 }
             }
+            move(open_list.get(minIndex).i - my_tx, open_list.get(minIndex).j - my_ty);
             close_list.add(open_list.get(minIndex));
             if (open_list.get(minIndex).h == 0)
             {
                 out.println("Exit found!");
                 break;
             }
+            open_list.remove(minIndex);
             for (int i = -1; i < 2; i++)
             {
+                i = my_tx + i;
                 for (int j = -1; j < 2; j++)
                 {
+                    j = my_ty + j;
                     if (!aTiles[i][j].available || close_list.contains(aTiles[i][j]));
                     else if (!open_list.contains(aTiles[i][j]))
                     {
                         aTiles[i][j].parent = aTiles[my_tx][my_ty];
-                        path += countDistance(my_tx, my_ty, i, j);
-                        aTiles[i][j].g = path;
+                        aTiles[i][j].g = aTiles[my_tx][my_ty].g + countDistance(my_tx, my_ty, i, j);
                         aTiles[i][j].f = aTiles[i][j].g + aTiles[i][j].h;
                         open_list.add(aTiles[i][j]);
+                    }
+                    else
+                    {
+                        double newG = aTiles[my_tx][my_ty].g + countDistance(my_tx, my_ty, i, j);
+                        if (newG < aTiles[i][j].g)
+                        {
+                            aTiles[i][j].parent = aTiles[my_tx][my_ty];
+                            aTiles[i][j].g = newG;
+                            aTiles[i][j].f = aTiles[i][j].g + aTiles[i][j].h;
+                        }
                     }
                 }
             }
 
-            ahead(1);
+            //ahead(1);
             if (just_once < 100) radar();
             meAsObstacle();
             //if (counter == 10)
@@ -112,11 +125,11 @@ public class MyRobot extends Robot
         }
     }
 
-    @Override
+    /*@Override
     public void onHitWall(HitWallEvent event)
     {
         turnRight(this.generator.nextInt(150));
-    }
+    }*/
 
     @Override
     public void onScannedRobot(ScannedRobotEvent event)
@@ -128,11 +141,11 @@ public class MyRobot extends Robot
         enemyAsObstacle();
     }
 
-    @Override
+    /*@Override
     public void onHitRobot(HitRobotEvent event)
     {
         back(40);
-    }
+    }*/
 
     @Override
     public void onPaint(Graphics2D graphics2D)
@@ -223,5 +236,24 @@ public class MyRobot extends Robot
     public double countDistance(int x1, int y1, int x2, int y2)
     {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+    public void move(int x, int y) {
+        int fin_ang;
+
+        if(x==0 && y==1) fin_ang = 0;
+        else if(x==1 && y==0) fin_ang = 90;
+        else if(x==0 && y==-1) fin_ang = 180;
+        else if(x==-1 && y==0) fin_ang = 270;
+        else if(x==-1 && y==1) fin_ang = 315;
+        else if(x==1 && y==1) fin_ang = 45;
+        else if(x==1 && y==-1) fin_ang = 135;
+        else if(x==-1 && y==-1) fin_ang = 225;
+        else fin_ang = 0;
+
+        int angle = (int)getHeading();
+        if (angle != fin_ang) turnRight(fin_ang-angle);
+        if (fin_ang % 180 == 0) ahead(dim_factor[1]);
+        else if (fin_ang % 90 == 0) ahead(dim_factor[0]);
+        else ahead(Math.sqrt(Math.pow(dim_factor[0], 2) + Math.pow(dim_factor[1], 2)));
     }
 }
