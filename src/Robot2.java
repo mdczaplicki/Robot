@@ -1,9 +1,7 @@
 import robocode.Robot;
 import robocode.ScannedRobotEvent;
 
-import javax.xml.soap.Node;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Robot2 extends Robot {
@@ -108,7 +106,7 @@ public class Robot2 extends Robot {
         {
             for (int j = 1; j < dimension - 3; j += 2)
             {
-                enemy_tab1[(int)i/2][(int)j/2] = enemy_tab[i][j] || enemy_tab[i+1][j+1] || enemy_tab[i+1][j] || enemy_tab[i][j+1];
+                enemy_tab1[i/2][j/2] = enemy_tab[i][j] || enemy_tab[i+1][j+1] || enemy_tab[i+1][j] || enemy_tab[i][j+1]; // Tu powinno być parsowanie do inta, ale IDE mówi mi, że jednak nie, więc usunąłem.
             }
         }
     }
@@ -170,7 +168,7 @@ public class Robot2 extends Robot {
             }
         }
         path = new ArrayList<>();
-        Field temp = new Field();
+        Field temp; // = new Field(); IDE mówi, że to też niepotrzebne, chociaż 30 minut temu było potrzebne. xD
         temp = map[18][18];
         path.add(temp);
         while (temp != map[0][0])
@@ -211,22 +209,16 @@ public class Robot2 extends Robot {
     void moveTank(int i, int j)
     {
         int angle = (int)getHeading();
-        int goal_angle = 0;
-        /*if (i == 0)
-        {
-            if (j == 1) goal_angle = 0;
-            else if (j == -1) goal_angle = 180;
-        }
-        else goal_angle = i * Math.abs(j - 3) * 45;*/
-        if(i==0 && j==1) goal_angle = 0;
-        else if(i==1 && j==0) goal_angle = 90;
-        else if(i==0 && j==-1) goal_angle = 180;
-        else if(i==-1 && j==0) goal_angle = -90;
-        else if(i==-1 && j==1) goal_angle = -45;
-        else if(i==1 && j==1) goal_angle = 45;
-        else if(i==1 && j==-1) goal_angle = 135;
+        int goal_angle;
+        if(i==0 && j==1)        goal_angle = 0;
+        else if(i==1 && j==0)   goal_angle = 90;
+        else if(i==0 && j==-1)  goal_angle = 180;
+        else if(i==-1 && j==0)  goal_angle = -90;
+        else if(i==-1 && j==1)  goal_angle = -45;
+        else if(i==1 && j==1)   goal_angle = 45;
+        else if(i==1 && j==-1)  goal_angle = 135;
         else if(i==-1 && j==-1) goal_angle = -135;
-        else goal_angle = 0;
+        else                    goal_angle = 0;
         if (angle != goal_angle) turnRight(goal_angle - angle);
         if ((i != 0 || j != 0) && (i & j) == 0) ahead(factor*2);
         else if (i != 0 || j != 0) ahead(Math.sqrt(2 * Math.pow(factor*2, 2)));
