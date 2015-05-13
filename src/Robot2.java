@@ -1,6 +1,7 @@
 import robocode.Robot;
 import robocode.ScannedRobotEvent;
 
+import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -11,6 +12,8 @@ public class Robot2 extends Robot
     int dimension = 40;
     boolean[][] enemy_tab = new boolean[dimension][dimension];
     boolean[][] enemy_tab1 = new boolean[dimension/2][dimension/2];
+    boolean[][] open_tab = new boolean[dimension/2][dimension/2];
+    boolean[][] closed_tab = new boolean[dimension/2][dimension/2];
     int factor;
     double enemy_x, enemy_y;
 
@@ -20,6 +23,8 @@ public class Robot2 extends Robot
 
     Field map[][] = new Field[19][19];
     ArrayList<Field> path;
+    ArrayList<ArrayList> array_open = new ArrayList<>();
+    ArrayList<ArrayList> array_closed = new ArrayList<>();
 
     int counter = 0;
     boolean finish = false;
@@ -33,7 +38,7 @@ public class Robot2 extends Robot
 
         while (true)
         {
-            turnRadarLeft(10d);
+            if (just_once < 100) turnRadarLeft(10d);
             try
             {
                 if (path.size() == 0) finish = true;
@@ -73,7 +78,7 @@ public class Robot2 extends Robot
             enemy_tab[enemy_i][enemy_j] = true;
             from40to20();
 
-            just_once++;
+            just_once += 5;
         }
     }
 
@@ -95,6 +100,22 @@ public class Robot2 extends Robot
             {
                 g.setColor(Color.RED);
                 if (enemy_tab1[i][j]) g.drawRect(i * factor * 2 + factor, j * factor * 2 + factor, factor * 2, factor * 2);
+            }
+        }
+        for (int i = 0; i < dimension/2 - 1; i++)
+        {
+            for (int j = 0; j < dimension/2 - 1; j++)
+            {
+                g.setColor(Color.BLUE);
+                if (closed_tab[i][j]) g.drawRect(i * factor * 2 + factor, j * factor * 2 + factor, factor * 2, factor * 2);
+            }
+        }
+        for (int i = 0; i < dimension/2 - 1; i++)
+        {
+            for (int j = 0; j < dimension/2 - 1; j++)
+            {
+                g.setColor(Color.WHITE);
+                if (open_tab[i][j]) g.drawRect(i * factor * 2 + factor, j * factor * 2 + factor, factor * 2, factor * 2);
             }
         }
         g.setColor(Color.WHITE);
@@ -171,9 +192,13 @@ public class Robot2 extends Robot
                     catch (IndexOutOfBoundsException ignored){}
                 }
             }
+            closed_tab = new boolean[dimension/2][dimension/2];
+            open_tab = new boolean[dimension/2][dimension/2];
+            for (Field f : open)     open_tab[f.getI()][f.getJ()] = true;
+            for (Field f : closed) closed_tab[f.getI()][f.getJ()] = true;
         }
         path = new ArrayList<>();
-        Field temp; // = new Field(); IDE mówi, że to też niepotrzebne, chociaż 30 minut temu było potrzebne. xD
+        Field temp; // = new Field(); IDE mówi, że to też niepotrzebne, chociaż 30 minut temu było potrzebne.
         temp = map[18][18];
         path.add(temp);
         while (temp != map[0][0])
