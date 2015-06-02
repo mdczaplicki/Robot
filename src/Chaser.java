@@ -30,6 +30,7 @@ public class Chaser extends Robot
     @Override
     public void onHitRobot(HitRobotEvent e)
     {
+        back(50);
         turnGunRight(e.getBearing());
         fire(20);
     }
