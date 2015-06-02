@@ -33,8 +33,8 @@ public class Robot2 extends Robot
     public void run()
     {
         factor = (int) getBattleFieldWidth() / dimension;
-        int n = start.x;
-        int m = start.y;
+        int n = (int)start.getX();
+        int m = (int)start.getY();
 
         while (true)
         {
@@ -137,10 +137,10 @@ public class Robot2 extends Robot
     {
         ArrayList<Field> closed = new ArrayList<>();
         ArrayList<Field> open = new ArrayList<>();
-        map[start.x][start.y].setG(0d);
-        map[start.x][start.y].setF();
-        map[start.x][start.y].setParent(null);
-        open.add(map[start.x][start.y]);
+        map[(int)start.getX()][(int)start.getY()].setG(0d);
+        map[(int)start.getX()][(int)start.getY()].setF();
+        map[(int)start.getX()][(int)start.getY()].setParent(null);
+        open.add(map[(int)start.getX()][(int)start.getY()]);
 
         while(!open.isEmpty())
         {
@@ -157,7 +157,7 @@ public class Robot2 extends Robot
             out.println("i = " + Q.getI() + " j = " + Q.getJ());
             open.remove(Q);
             closed.add(Q);
-            if (Q.getI() == goal.x && Q.getJ() == goal.y)
+            if (Q.getI() == goal.getX() && Q.getJ() == goal.getY())
             {
                 out.println("Found goal.");
                 break;
@@ -226,7 +226,7 @@ public class Robot2 extends Robot
                 map[i][j].setI(i);
                 map[i][j].setJ(j);
                 map[i][j].setAvailable(!enemy_tab1[i][j]);
-                map[i][j].setH(countDistance(i, j, goal.x, goal.y));
+                map[i][j].setH(countDistance(i, j, (int)goal.getX(), (int)goal.getY()));
             }
         }
     }

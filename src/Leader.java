@@ -1,6 +1,3 @@
-/**
- * Created by Marek on 2015-05-27.
- */
 import robocode.*;
 
 import java.awt.*;
@@ -56,6 +53,7 @@ public class Leader extends TeamRobot {
     {
         if (isTeammate(e.getName()))
         {
+            out.println("Szczelam do wroga");
             return;
         }
         double enemyBearing = this.getHeading() + e.getBearing();
@@ -70,6 +68,7 @@ public class Leader extends TeamRobot {
         fire(200);
         try
         {
+            out.println("wyysy³am wiadomoœæ");
             broadcastMessage(new Point(enemy_x, enemy_y));
         }
         catch (IOException ex)

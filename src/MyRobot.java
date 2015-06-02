@@ -56,7 +56,7 @@ public class MyRobot extends Robot
             for (int j = 0; j < dimension; j++)
             {
                 double fromStart = (double)Math.round(countDistance(3, 3, i, j)*100)/100;
-                double toEnd = (double)Math.round(countDistance(i, j, finish.x, finish.y)*100)/100;
+                double toEnd = (double)Math.round(countDistance(i, j, (int)finish.getX(), (int)finish.getY())*100)/100;
                 boolean isAvailable = !enemy_tab[i][j];
                 aTiles[i][j] = new ATile(fromStart, toEnd, isAvailable, null, i, j);
             }
@@ -197,7 +197,7 @@ public class MyRobot extends Robot
                 {
                     my_tab[my_tx + i][my_ty + j] = true;
                 }
-                catch (ArrayIndexOutOfBoundsException e){}
+                catch (ArrayIndexOutOfBoundsException ignored){}
     }
 
     public void enemyAsObstacle()
@@ -217,7 +217,7 @@ public class MyRobot extends Robot
                     {
                         enemy_tab[enemy_tx + i][enemy_ty + j] = true;
                     }
-                    catch (ArrayIndexOutOfBoundsException e) {}
+                    catch (ArrayIndexOutOfBoundsException ignored) {}
                 }
             }
             just_once++;
